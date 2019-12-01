@@ -124,12 +124,19 @@ class Traffic:
 def liuliang():
 	NET_IN = 0
 	NET_OUT = 0
+	rx = 0
+	tx = 0
 	vnstat=os.popen('vnstat --dumpdb').readlines()
 	for line in vnstat:
-		if line[0:4] == "m;0;":
+		if line[0:8] == "totalrx;":
 			mdata=line.split(";")
-			NET_IN=int(mdata[3])*1024*1024
-			NET_OUT=int(mdata[4])*1024*1024
+			NET_IN=int(mdata[1])*1024*1024
+			rx = 1
+		if line[0:8] == "totaltx;":
+			mdata=line.split(";")
+			NET_OUT=int(mdata[1])*1024*1024
+			tx = 1
+		if rx == 1 & tx == 1:
 			break
 	return NET_IN, NET_OUT
 
